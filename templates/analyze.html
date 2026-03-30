@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Enhanced analysis results with better mobile layout -->
+<div class="row g-4">
+    <div class="col-12">
+        <!-- Header with verdict badge -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3 mb-4">
+            <div>
+                <h2 class="mb-2 fw-bold">
+                    <i class="fas fa-search me-2 text-primary"></i>Analysis Results
+                </h2>
+                <p class="text-muted mb-0 small">{{ filename }}</p>
+            </div>
+            <div class="verdict-badge">
+                <span class="badge fs-6 px-4 py-2 rounded-pill bg-{% if results.verdict == 'malicious' %}danger{% elif results.verdict == 'suspicious' %}warning{% else %}success{% endif %}">
+                    <i class="fas fa-{% if results.verdict == 'malicious' %}exclamation-triangle{% elif results.verdict == 'suspicious' %}exclamation-circle{% else %}check-circle{% endif %} me-2"></i>
+                    {{ results.verdict|upper }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 bg-primary bg-opacity-10 h-100">
+                    <div class="card-body text-center p-3">
+                        <div class="display-6 fw-bold text-primary mb-1">{{ (results.score * 100)|round|int }}%</div>
+                        <div class="small text-muted">Phishing Score</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 bg-warning bg-opacity-10 h-100">
+                    <div class="card-body text-center p-3">
+                        <div class="display-6 fw-bold text-warning mb-1">{{ results.indicators|length }}</div>
+                        <div class="small text-muted">Indicators</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 bg-info bg-opacity-10 h-100">
+                    <div class="card-body text-center p-3">
+                        <div class="display-6 fw-bold text-info mb-1">{{ results.url_analysis.suspicious_count }}/{{ results.url_analysis.count }}</div>
+                        <div class="small text-muted">Suspicious URLs</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 bg-danger bg-opacity-10 h-100">
+                    <div class="card-body text-center p-3">
+                        <div class="display-6 fw-bold text-danger mb-1">{{ results.attachment_analysis.suspicious_count }}/{{ results.attachment_analysis.count }}</div>
+                        <div class="small text-muted">Suspicious Files</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if results.indicators %}
+        <!-- Enhanced indicators section -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-warning bg-opacity-10 border-0 rounded-top-4">
+                <h5 class="mb-0 d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                    Detection Indicators
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    {% for indicator in results.indicators %}
+                    <div class="col-12">
+                        <!-- Added alert-permanent class to prevent auto-dismissal -->
+                        <div class="alert alert-warning alert-permanent border-0 rounded-3 mb-0 d-flex align-items-start">
+                            <i class="fas fa-exclamation-circle me-3 mt-1 text-warning"></i>
+                            <span>{{ indicator }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Analysis Sections -->
+        <div class="row g-4">
+            <!-- Header Analysis -->
+            <div class="col-12 col-xl-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-header bg-light border-0 rounded-top-4">
+                        <h5 class="mb-0 d-flex align-items-center">
+                            <i class="fas fa-envelope-open text-primary me-2"></i>
+                            Header Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <tbody>
+                                    {% for key, value in results.headers.items() %}
+                                    <tr class="border-bottom">
+                                        <td class="fw-semibold text-dark py-3 px-4 border-0" style="width: 30%;">{{ key }}</td>
+                                        <td class="py-3 px-4 border-0 text-break small">{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Analysis -->
+            <div class="col-12 col-xl-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-header bg-light border-0 rounded-top-4">
+                        <h5 class="mb-0 d-flex align-items-center">
+                            <i class="fas fa-file-alt text-success me-2"></i>
+                            Content Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if results.content_analysis.indicators %}
+                        <div class="alert alert-warning border-0 rounded-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                                <div>
+                                    <strong>Suspicious Content Indicators:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        {% for indicator in results.content_analysis.indicators %}
+                                        <li class="small">{{ indicator }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success border-0 rounded-3 mb-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            No suspicious content indicators found.
+                        </div>
+                        {% endif %}
+                        
+                        <h6 class="fw-semibold mb-3">Content Preview:</h6>
+                        <div class="bg-light rounded-3 p-3">
+                            <pre class="mb-0 small text-wrap">{{ results.content_analysis.content_preview }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- URL Analysis -->
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-light border-0 rounded-top-4">
+                        <h5 class="mb-0 d-flex align-items-center">
+                            <i class="fas fa-link text-warning me-2"></i>
+                            URL Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if results.url_analysis.urls %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Found {{ results.url_analysis.urls|length }} URLs:</h6>
+                            <div class="row g-2">
+                                {% for url in results.url_analysis.urls %}
+                                <div class="col-12">
+                                    <div class="bg-light rounded-3 p-3 small text-break">
+                                        <i class="fas fa-external-link-alt me-2 text-muted"></i>{{ url }}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        {% if results.url_analysis.suspicious_urls %}
+                        <div class="alert alert-warning border-0 rounded-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Suspicious URLs:</strong>
+                                    <div class="mt-3">
+                                        {% for url, reasons in results.url_analysis.suspicious_urls.items() %}
+                                        <div class="mb-3 p-3 bg-white rounded-3">
+                                            <div class="fw-semibold text-break mb-2">{{ url }}</div>
+                                            <ul class="mb-0 small">
+                                                {% for reason in reasons %}
+                                                <li>{{ reason }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success border-0 rounded-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            No suspicious URLs found.
+                        </div>
+                        {% endif %}
+                        
+                        {% else %}
+                        <div class="alert alert-info border-0 rounded-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No URLs found in this email.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachment Analysis -->
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-light border-0 rounded-top-4">
+                        <h5 class="mb-0 d-flex align-items-center">
+                            <i class="fas fa-paperclip text-danger me-2"></i>
+                            Attachment Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if results.attachment_analysis.attachments %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Found {{ results.attachment_analysis.attachments|length }} attachments:</h6>
+                            <div class="row g-2">
+                                {% for attachment in results.attachment_analysis.attachments %}
+                                <div class="col-12 col-md-6">
+                                    <div class="bg-light rounded-3 p-3 d-flex align-items-center">
+                                        <i class="fas fa-file me-2 text-muted"></i>
+                                        <span class="small text-break">{{ attachment }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        {% if results.attachment_analysis.suspicious_attachments %}
+                        <div class="alert alert-warning border-0 rounded-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Suspicious Attachments:</strong>
+                                    <div class="mt-3">
+                                        {% for filename, reasons in results.attachment_analysis.suspicious_attachments.items() %}
+                                        <div class="mb-3 p-3 bg-white rounded-3">
+                                            <div class="fw-semibold mb-2">{{ filename }}</div>
+                                            <ul class="mb-0 small">
+                                                {% for reason in reasons %}
+                                                <li>{{ reason }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success border-0 rounded-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            No suspicious attachments found.
+                        </div>
+                        {% endif %}
+                        
+                        {% else %}
+                        <div class="alert alert-info border-0 rounded-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No attachments found in this email.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced action buttons with better mobile layout -->
+        <div class="text-center mt-5 pt-4 border-top">
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg rounded-3 fw-semibold">
+                    <i class="fas fa-plus me-2"></i>Analyze Another Email
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

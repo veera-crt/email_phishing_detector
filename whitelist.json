@@ -1,0 +1,21 @@
+{
+  "exactMatching": {
+    "mail": [],
+    "ip": ["127.0.0.1", "8.8.8.8", "8.8.4.4"],
+    "url": [],
+    "domain": ["adf.ly", "bit.ly"],
+    "filename": [],
+    "filetype": ["application/pdf"],
+    "hash": []
+  },
+  "domainsInSubdomains": ["paypal.com", "google.com"],
+  "domainsInURLs": ["paypal.com", "google.com"],
+  "domainsInEmails": ["paypal.com", "google.com"],
+  "regexMatching": {
+    "mail": [],
+    "ip": ["10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}", "172\\.16\\.\\d{1,3}\\.\\d{1,3}", "192\\.168\\.\\d{1,3}\\.\\d{1,3}"],
+    "url": [],
+    "domain": [],
+    "filename": []
+  }
+}

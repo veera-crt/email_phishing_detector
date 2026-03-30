@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Enhanced hero section with better mobile layout -->
+<div class="row g-4">
+    <div class="col-12">
+        <div class="text-center mb-5">
+            <div class="hero-icon mb-3">
+                <i class="fas fa-shield-alt text-primary" style="font-size: 3rem;"></i>
+            </div>
+            <h1 class="display-5 fw-bold text-dark mb-3">Phishing Email Analyzer</h1>
+            <p class="lead text-muted">Upload and analyze emails for phishing indicators with advanced detection algorithms</p>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-4">
+    <div class="col-12 col-lg-8">
+        <!-- Enhanced upload card with better mobile design -->
+        <div class="card border-0 shadow-lg rounded-4 mb-4">
+            <div class="card-header bg-gradient-primary text-white border-0 rounded-top-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-upload me-2"></i>
+                    <h3 class="mb-0 h5">Analyze Phishing Email</h3>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <p class="card-text text-muted mb-4">
+                    Upload an email in EML or MSG format to analyze it for phishing indicators.
+                    Our system will check headers, content, URLs, and attachments for suspicious patterns.
+                </p>
+                
+                <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data" class="upload-form">
+                    <div class="mb-4">
+                        <label for="emailFile" class="form-label fw-semibold">
+                            <i class="fas fa-file-alt me-1 text-primary"></i>Email File
+                        </label>
+                        <div class="file-upload-wrapper">
+                            <input class="form-control form-control-lg border-2" type="file" id="emailFile" name="email_file" accept=".eml,.msg" required>
+                            <div class="file-upload-help text-muted small mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Supported formats: .eml, .msg (Max size: 10MB)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-semibold">
+                            <i class="fas fa-search me-2"></i>Analyze Email
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Enhanced how it works section with better mobile cards -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-light border-0 rounded-top-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-cogs me-2 text-primary"></i>
+                    <h4 class="mb-0 h5">How It Works</h4>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="feature-item p-3 rounded-3 bg-light h-100">
+                            <div class="d-flex align-items-start">
+                                <div class="feature-icon me-3">
+                                    <i class="fas fa-envelope-open text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-2">Header Analysis</h6>
+                                    <p class="small text-muted mb-0">Checks for email spoofing, authentication failures, and routing inconsistencies</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="feature-item p-3 rounded-3 bg-light h-100">
+                            <div class="d-flex align-items-start">
+                                <div class="feature-icon me-3">
+                                    <i class="fas fa-file-alt text-success"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-2">Content Analysis</h6>
+                                    <p class="small text-muted mb-0">Identifies urgency tactics, sensitive information requests, and poor grammar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="feature-item p-3 rounded-3 bg-light h-100">
+                            <div class="d-flex align-items-start">
+                                <div class="feature-icon me-3">
+                                    <i class="fas fa-link text-warning"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-2">URL Analysis</h6>
+                                    <p class="small text-muted mb-0">Detects suspicious URLs, domain impersonation, and obfuscation techniques</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="feature-item p-3 rounded-3 bg-light h-100">
+                            <div class="d-flex align-items-start">
+                                <div class="feature-icon me-3">
+                                    <i class="fas fa-paperclip text-danger"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-2">Attachment Analysis</h6>
+                                    <p class="small text-muted mb-0">Identifies potentially dangerous file types and suspicious content patterns</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-primary bg-opacity-10 rounded-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-gavel text-primary me-2"></i>
+                        <strong class="text-primary">Verdict Calculation:</strong>
+                        <span class="ms-2 text-muted">Determines a final verdict based on all detected indicators</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
