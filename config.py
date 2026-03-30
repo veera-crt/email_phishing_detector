@@ -3,7 +3,7 @@ from datetime import timedelta
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key-here'
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = '/tmp' if os.environ.get('VERCEL') else 'uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     ALLOWED_EXTENSIONS = {'eml', 'msg'}
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
@@ -25,5 +25,5 @@ class Config:
     ]
     
     # API Keys (replace with your actual keys)
-    VIRUSTOTAL_API_KEY = os.environ.get("8445803baa0217d93437379d45d1c8a876ae488294adea2c61704a72b3fb2a75")
+    VIRUSTOTAL_API_KEY = os.environ.get("VIRUSTOTAL_API_KEY")
     ENABLE_VIRUSTOTAL = os.environ.get('ENABLE_VIRUSTOTAL', 'False').lower() == 'true'
